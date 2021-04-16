@@ -9,7 +9,7 @@ import {
 	INodeTypeDescription,
 } from 'n8n-workflow';
 
-const pdf = require('pdf-parse');
+import { PdfData } from 'pdfdataextract';
 
 export class ReadPdf implements INodeType {
 	description: INodeTypeDescription = {
@@ -25,6 +25,12 @@ export class ReadPdf implements INodeType {
 		},
 		inputs: ['main'],
 		outputs: ['main'],
+    credentials: [
+			{
+				name: 'readPDF',
+				required: false
+			}
+    ]
 		properties: [
 			{
 				displayName: 'Binary Property',
@@ -33,12 +39,13 @@ export class ReadPdf implements INodeType {
 				default: 'data',
 				required: true,
 				description: 'Name of the binary property from which to<br />read the PDF file.',
-			},
+			}
 		],
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
+    const readPDF = this.getCredentials('readPDF');
 
 		const returnData: INodeExecutionData[] = [];
 		const length = items.length as unknown as number;
@@ -56,7 +63,9 @@ export class ReadPdf implements INodeType {
 			const binaryData = Buffer.from(item.binary[binaryPropertyName].data, BINARY_ENCODING);
 			returnData.push({
 				binary: item.binary,
-				json: await pdf(binaryData),
+				json: await PdfData.extract(binaryData, {
+          password: readPDF.password
+        }),
 			});
 
 		}
