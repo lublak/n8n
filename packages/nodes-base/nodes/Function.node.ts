@@ -43,7 +43,7 @@ export class Function implements INodeType {
 		// const item = this.getInputData();
 		let items = this.getInputData();
 		
-		const returnData: INodeExecutionData[] = [];
+		let returnData: INodeExecutionData[] = [];
 		
 		let item: INodeExecutionData;
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
@@ -126,6 +126,6 @@ export class Function implements INodeType {
 			}
 		}
 
-		return this.prepareOutputData(items);
+		return this.prepareOutputData(returnData);
 	}
 }

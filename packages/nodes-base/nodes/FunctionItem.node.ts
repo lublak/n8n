@@ -98,7 +98,7 @@ export class FunctionItem implements INodeType {
 			const vm = new NodeVM(options);
 
 			// Get the code to execute
-			const functionCode = this.getNodeParameter('functionCode') as string;
+			const functionCode = this.getNodeParameter('functionCode', 0) as string;
 
 			try {
 				// Execute the function code
@@ -111,7 +111,7 @@ export class FunctionItem implements INodeType {
 			}
 
 			// Do very basic validation of the data
-			if (jsonData === undefined) {
+			if (newItem.json === undefined) {
 				if (this.continueOnFail() === false) {
 					throw new NodeOperationError(this.getNode(), 'No data got returned. Always an object has to be returned!');
 				}
